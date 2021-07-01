@@ -82,6 +82,20 @@ const Survey = () => {
     }
   }
 
+  const nextPageHandler = () => {
+    let index = 0
+    console.log(index)
+    if(page == 2){
+      for(let i = 0; i < staticData.length; i++){
+        for(let j = 0; j < staticData[i].options.length; j++){
+          document.getElementsByTagName('input')[index].checked = false
+          index+=1
+        }
+      }
+    }
+    setPage(prevState => prevState + 1)
+  }
+
   const onAnswerHandler = (id, value) => {
     let tempArr = [...answer]
     let newId = [...idContainer]
@@ -134,7 +148,7 @@ const Survey = () => {
   const renderQuestion = () => {
     const radio = ['Facebook', 'Instagram', 'Twitter', 'Tiktok']
     return data.map((key, index) => (
-      <QuestionWrapper>
+      <QuestionWrapper key={key.id}>
         <Text>{index + 1}. Media sosial mana yang akan saudara gunakan untuk membeli {key.category_name}?</Text>
         {
           radio.map((val, idx) => (
@@ -180,13 +194,7 @@ const Survey = () => {
       }
       {
         page < 3 ?
-        <Button onClick={() => setPage(prevState => prevState + 1)} disabled={interviewee.length < 1 ? true : false}>Next</Button>
-        // :
-        // page == 2 ?
-        // <div style={{display: 'flex'}}>
-        //   <Button onClick={() => setPage(prevState => prevState - 1)}>Back</Button>
-        //   <Button onClick={() => setPage(prevState => prevState + 1)} disabled={interviewee.length < 1 ? true : false}>Next</Button>
-        // </div>
+        <Button onClick={nextPageHandler} disabled={interviewee.length < 1 ? true : false}>Next</Button>
         :
         <Button onClick={onSend}>Send</Button>
       }

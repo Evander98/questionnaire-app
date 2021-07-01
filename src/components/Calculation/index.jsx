@@ -42,7 +42,7 @@ const Calculation = () => {
     }
   }, [page])
 
-  const renderAllResult = () => {
+  const renderAllCalculation = () => {
     if(Object.keys(allData).length > 0){
       return allData.minimumClusterArrays.map((key, index) => (
         <Table>
@@ -93,7 +93,7 @@ const Calculation = () => {
     ))
   }
 
-  const renderResult = () => {
+  const renderCalculation = () => {
     if(Object.keys(data).length > 0){
       return data.record.map((key, index) => (
         <TableRow>
@@ -132,10 +132,10 @@ const Calculation = () => {
             <TableHead>CLOSEST DISTANCE</TableHead>
             <TableHead>CLUSTER</TableHead>
           </TableRow>
-          {renderResult()}
+          {renderCalculation()}
         </Table>
         :
-        renderAllResult()
+        renderAllCalculation()
       }
     </CalculationContainer>
   )

@@ -133,7 +133,7 @@ const AddQuestion = () => {
   }, []);
 
   useEffect(() => {
-    if (message != "") {
+    if (message !== "") {
       Swal.fire({
         icon: message === "Please add anything!" ? "error" : "success",
         title: message === "Please add anything!" ? "Oops..." : "Yeah...",

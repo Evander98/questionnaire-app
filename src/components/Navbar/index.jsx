@@ -25,14 +25,14 @@ const Navbar = () => {
             <NavButton>Survey</NavButton>
           </Link>
         )}
-        {user.fullName == "" ? null : window.location.pathname ==
+        {/* {user.fullName == "" ? null : window.location.pathname ==
           "/category" ? (
             <NavButton active>Category</NavButton>
         ) : (
             <Link to='/category'>
               <NavButton >Category</NavButton>
             </Link>
-        )}
+        )} */}
         {user.fullName == "" ? null : window.location.pathname ==
           "/calculation" ? (
             <NavButton active>Calculation</NavButton>
