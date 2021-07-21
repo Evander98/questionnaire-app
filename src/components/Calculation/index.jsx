@@ -9,6 +9,7 @@ const Calculation = () => {
   const [allData, setAllData] = useState({})
   const [data, setData] = useState({})
   const [page, setPage] = useState(() => ({page: 1, id: 0}))
+  const [itterationToggle, setItterationToggle] = useState([false, false, false])
 
   useEffect(() => {
     axios.get(urlAPI + '/category/getCategory')
@@ -35,6 +36,7 @@ const Calculation = () => {
       axios.get(urlAPI + '/survey/countAll')
       .then(res => {
         setAllData(res.data)
+        // console.log(res.data)
       })
       .catch(err => {
         console.log(err)
@@ -43,45 +45,82 @@ const Calculation = () => {
   }, [page])
 
   const renderAllCalculation = () => {
+    var tempToggle = [...itterationToggle]
+    const tes = (i) => {
+      tempToggle[i] = !tempToggle[i]
+      setItterationToggle(tempToggle)
+    }
     if(Object.keys(allData).length > 0){
-      return allData.minimumClusterArrays.map((key, index) => (
-        <Table>
-          <TableData>{index+1}{index+1 == 1 ? 'st' : index+1 == 2 ? 'nd' : index+1 == 3 ? 'rd' : 'th'} Iteration</TableData>
-          <TableRow>
-            <TableHead>No.</TableHead>
-            {
-              categories.map(category => (
-                <TableHead>{category.category_name.toUpperCase()}</TableHead>
-              ))
-            }
-            <TableHead>RESULT CLUSTER 1</TableHead>
-            <TableHead>RESULT CLUSTER 2</TableHead>
-            <TableHead>RESULT CLUSTER 3</TableHead>
-            <TableHead>RESULT CLUSTER 4</TableHead>
-            <TableHead>CLOSEST DISTANCE</TableHead>
-            <TableHead>CLUSTER</TableHead>
-          </TableRow>
+      return allData.minimumClusterArrays.map((key, index) => {
+        return <div>
+          <Category style={{backgroundColor: '#E9E8E8'}} onClick={() => tes(index)}>
+            <Text>{index+1}{index+1 == 1 ? 'st' : index+1 == 2 ? 'nd' : index+1 == 3 ? 'rd' : 'th'} Iteration</Text>
+          </Category>
           {
-            allData.data.map((newData, newDataIndex) => (
-              <TableRow>
-                <TableData>{newDataIndex+1}.</TableData>
+            itterationToggle[index] == true ?
+            <div>
+              <Table>
+                <TableRow>
+                  <TableHead>CLUSTER</TableHead>
+                  {
+                    categories.map(category => (
+                      <TableHead>{category.category_name.toUpperCase()}</TableHead>
+                    ))
+                  }
+                </TableRow>
                 {
-                  allData.data[newDataIndex].map(newData2 => (
-                    <TableData>{newData2}</TableData>
+                  allData.centroidArrays[index].map((newData, newDataIndex) => (
+                    <TableRow>
+                      <TableData>Cluster {newDataIndex+1}</TableData>
+                      {
+                        newData.map((cent, centIndex) => {
+                          return <TableData>{cent.toFixed(4)}</TableData>
+                        })
+                      }
+                    </TableRow>
                   ))
                 }
+              </Table>
+              <Table>
+                <TableRow>
+                  <TableHead>No.</TableHead>
+                  {
+                    categories.map(category => (
+                      <TableHead>{category.category_name.toUpperCase()}</TableHead>
+                    ))
+                  }
+                  <TableHead>RESULT CLUSTER 1</TableHead>
+                  <TableHead>RESULT CLUSTER 2</TableHead>
+                  <TableHead>RESULT CLUSTER 3</TableHead>
+                  <TableHead>RESULT CLUSTER 4</TableHead>
+                  <TableHead>CLOSEST DISTANCE</TableHead>
+                  <TableHead>CLUSTER</TableHead>
+                </TableRow>
                 {
-                  allData.resultArrays[index][newDataIndex].map(result => (
-                    <TableData>{result.toFixed(4)}</TableData>
+                  allData.data.map((newData, newDataIndex) => (
+                    <TableRow>
+                      <TableData>{newDataIndex+1}.</TableData>
+                      {
+                        allData.data[newDataIndex].map(newData2 => (
+                          <TableData>{newData2}</TableData>
+                        ))
+                      }
+                      {
+                        allData.resultArrays[index][newDataIndex].map(result => (
+                          <TableData>{result.toFixed(4)}</TableData>
+                        ))
+                      }
+                      <TableData>{allData.minimumClusterArrays[index][newDataIndex]+1}</TableData>
+                      <TableData>{allData.minimumClusterArrays[index][newDataIndex] == 0 ? 'Facebook' : allData.minimumClusterArrays[index][newDataIndex] == 1 ? 'Instagram' : allData.minimumClusterArrays[index][newDataIndex] == 2 ? 'Twitter' : allData.minimumClusterArrays[index][newDataIndex] == 3 ? 'Tiktok' : 'Not Clustered'}</TableData>
+                    </TableRow>
                   ))
                 }
-                <TableData>{allData.minimumClusterArrays[index][newDataIndex]+1}</TableData>
-                <TableData>{allData.minimumClusterArrays[index][newDataIndex] == 0 ? 'Facebook' : allData.minimumClusterArrays[index][newDataIndex] == 1 ? 'Instagram' : allData.minimumClusterArrays[index][newDataIndex] == 2 ? 'Twitter' : allData.minimumClusterArrays[index][newDataIndex] == 3 ? 'Tiktok' : 'Not Clustered'}</TableData>
-              </TableRow>
-            ))
+              </Table>
+            </div>
+            : null
           }
-        </Table>
-      ))
+        </div>
+      })
     }
   }
 

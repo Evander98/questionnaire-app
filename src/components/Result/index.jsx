@@ -37,23 +37,34 @@ const Result = () => {
       axios
         .get(urlAPI + `/survey/countCategory?id=${page.id}`)
         .then((res) => {
-          var tempFirstHalf = [];
-          var tempSecondHalf = [];
-          for (let i = 0; i < res.data.clusterResult.length; i++) {
-            tempFirstHalf.push({
-              x: res.data.clusterResult[i][0],
-              y: res.data.clusterResult[i][1],
-            });
-            tempSecondHalf.push({
-              x: res.data.clusterResult[i][2] + 5,
-              y: res.data.clusterResult[i][3] + 5,
-            });
+          console.log(res.data.clusterResult)
+          let tempChartData = [[], [], [], []];
+          for(let i = 0; i < res.data.clusterResult.length; i++) {
+            for(let j = 0; j < res.data.clusterResult[i].length; j++) {
+              tempChartData[j].push({ x: j+1, y: res.data.clusterResult[i][j]})
+            }
           }
 
-          setChartCategoryData({
-            first: tempFirstHalf,
-            second: tempSecondHalf,
-          });
+          setChartData(tempChartData);
+          // console.log(tempChartData)
+
+          // var tempFirstHalf = [];
+          // var tempSecondHalf = [];
+          // for (let i = 0; i < res.data.clusterResult.length; i++) {
+          //   tempFirstHalf.push({
+          //     x: res.data.clusterResult[i][0],
+          //     y: res.data.clusterResult[i][1],
+          //   });
+          //   tempSecondHalf.push({
+          //     x: res.data.clusterResult[i][2] + 5,
+          //     y: res.data.clusterResult[i][3] + 5,
+          //   });
+          // }
+
+          // setChartCategoryData({
+          //   first: tempFirstHalf,
+          //   second: tempSecondHalf,
+          // });
           // console.log(tempFirstHalf);
 
           // if (Object.keys(res.data).length > 0) {
@@ -79,22 +90,29 @@ const Result = () => {
         .get(urlAPI + "/survey/countAll")
         .then((res) => {
           let tempChartData = [[], [], [], []];
-          for (let i = 0; i < res.data.resultArrays.length; i++) {
-            if (i == 0) {
-              for (let j = 0; j < res.data.resultArrays[i].length; j++) {
-                for (let k = 0; k < res.data.resultArrays[i][j].length; k++) {
-                  tempChartData[k].push({ x: res.data.resultArrays[i][j][k] });
-                }
-              }
-            } else if (i == res.data.resultArrays.length - 1) {
-              for (let j = 0; j < res.data.resultArrays[i].length; j++) {
-                for (let k = 0; k < res.data.resultArrays[i][j].length; k++) {
-                  tempChartData[k][j].y = res.data.resultArrays[i][j][k];
-                }
-              }
+          for(let i = 0; i < res.data.resultArrays[res.data.resultArrays.length-1].length; i++) {
+            for(let j = 0; j < res.data.resultArrays[res.data.resultArrays.length-1][i].length; j++) {
+              tempChartData[j].push({ x: j+1, y: res.data.resultArrays[res.data.resultArrays.length-1][i][j]})
             }
           }
+
+          // for (let i = 0; i < res.data.resultArrays.length; i++) {
+          //   if (i == 0) {
+          //     for (let j = 0; j < res.data.resultArrays[i].length; j++) {
+          //       for (let k = 0; k < res.data.resultArrays[i][j].length; k++) {
+          //         tempChartData[k].push({ x: res.data.resultArrays[i][j][k] });
+          //       }
+          //     }
+          //   } else if (i == res.data.resultArrays.length - 1) {
+          //     for (let j = 0; j < res.data.resultArrays[i].length; j++) {
+          //       for (let k = 0; k < res.data.resultArrays[i][j].length; k++) {
+          //         tempChartData[k][j].y = res.data.resultArrays[i][j][k];
+          //       }
+          //     }
+          //   }
+          // }
           setChartData(tempChartData);
+          // console.log(tempChartData)
         })
         .catch((err) => {
           console.log(err);
@@ -122,7 +140,7 @@ const Result = () => {
         </Category>
         {renderCategories()}
       </CategoriesWrapper>
-      {page.id !== 0 ? (
+      {/* {page.id !== 0 ? (
         <Scatter
           data={{
             datasets: [
@@ -206,7 +224,46 @@ const Result = () => {
             },
           }}
         />
-      )}
+        )} */}
+        <Scatter
+          data={{
+            datasets: [
+              {
+                label: "Facebook",
+                data: chartData[0],
+                backgroundColor: "rgba(255, 99, 132, 1)",
+              },
+              {
+                label: "Instagram",
+                data: chartData[1],
+                backgroundColor: "rgba(54, 162, 235, 1)",
+              },
+              {
+                label: "Twitter",
+                data: chartData[2],
+                backgroundColor: "rgba(255, 206, 86, 1)",
+              },
+              {
+                label: "Tiktok",
+                data: chartData[3],
+                backgroundColor: "rgba(75, 192, 192, 1)",
+              },
+            ],
+          }}
+          width={600}
+          height={400}
+          options={{
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
+          }}
+        />
     </ResultContainer>
   );
 };
