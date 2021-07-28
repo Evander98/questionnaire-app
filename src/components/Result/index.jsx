@@ -89,12 +89,34 @@ const Result = () => {
       axios
         .get(urlAPI + "/survey/countAll")
         .then((res) => {
+          console.log(res.data.resultArrays)
+
           let tempChartData = [[], [], [], []];
           for(let i = 0; i < res.data.resultArrays[res.data.resultArrays.length-1].length; i++) {
             for(let j = 0; j < res.data.resultArrays[res.data.resultArrays.length-1][i].length; j++) {
-              tempChartData[j].push({ x: j+1, y: res.data.resultArrays[res.data.resultArrays.length-1][i][j]})
+              // tempChartData[j].push({ x: j+1, y: res.data.resultArrays[res.data.resultArrays.length-1][i][j]})
+              tempChartData[j].push({ x: res.data.resultArrays[res.data.resultArrays.length-1][i][j], y: res.data.resultArrays[res.data.resultArrays.length-1][i][j]})
             }
           }
+          
+          
+          // let tempChartData = [];
+          // for(let i=0; i< res.data.resultArrays.length; i++) {
+          //   tempChartData.push([[], [], [], []])
+          //   for(let j=0; j < res.data.resultArrays[i].length; j++) {
+          //     // tempChartData[i].push([])
+          //     for(let k=0; k < res.data.resultArrays[i][j].length; k++) {
+          //       // tempChartData[i][j].push([])
+
+          //       if(k == res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))){
+          //         tempChartData[i][k].push({ 
+          //           x: res.data.resultArrays[i][j][res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))],
+          //           y: res.data.resultArrays[i][j][res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))]
+          //         })
+          //       }
+          //     }
+          //   }
+          // }
 
           // for (let i = 0; i < res.data.resultArrays.length; i++) {
           //   if (i == 0) {
@@ -111,8 +133,8 @@ const Result = () => {
           //     }
           //   }
           // }
+          console.log(tempChartData)
           setChartData(tempChartData);
-          // console.log(tempChartData)
         })
         .catch((err) => {
           console.log(err);
