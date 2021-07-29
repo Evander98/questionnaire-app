@@ -89,34 +89,50 @@ const Result = () => {
       axios
         .get(urlAPI + "/survey/countAll")
         .then((res) => {
-          console.log(res.data.resultArrays)
-
-          let tempChartData = [[], [], [], []];
-          for(let i = 0; i < res.data.resultArrays[res.data.resultArrays.length-1].length; i++) {
-            for(let j = 0; j < res.data.resultArrays[res.data.resultArrays.length-1][i].length; j++) {
-              // tempChartData[j].push({ x: j+1, y: res.data.resultArrays[res.data.resultArrays.length-1][i][j]})
-              tempChartData[j].push({ x: res.data.resultArrays[res.data.resultArrays.length-1][i][j], y: res.data.resultArrays[res.data.resultArrays.length-1][i][j]})
-            }
-          }
+          // console.log(res.data.resultArrays)
+          
+          // let tempChartData = [[], [], [], []];
+          // for(let i = 0; i < res.data.resultArrays[res.data.resultArrays.length-1].length; i++) {
+          //   for(let j = 0; j < res.data.resultArrays[res.data.resultArrays.length-1][i].length; j++) {
+          //     tempChartData[j].push({ x: j+1, y: res.data.resultArrays[res.data.resultArrays.length-1][i][j]})
+          //     // tempChartData[j].push({ x: res.data.resultArrays[res.data.resultArrays.length-1][i][j], y: res.data.resultArrays[res.data.resultArrays.length-1][i][j]})
+          //   }
+          // }
           
           
-          // let tempChartData = [];
+          let tempChartData = [];
           // for(let i=0; i< res.data.resultArrays.length; i++) {
           //   tempChartData.push([[], [], [], []])
           //   for(let j=0; j < res.data.resultArrays[i].length; j++) {
-          //     // tempChartData[i].push([])
           //     for(let k=0; k < res.data.resultArrays[i][j].length; k++) {
-          //       // tempChartData[i][j].push([])
 
           //       if(k == res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))){
           //         tempChartData[i][k].push({ 
-          //           x: res.data.resultArrays[i][j][res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))],
+          //           // x: res.data.resultArrays[i][j][res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))],
+          //           x: k+1,
           //           y: res.data.resultArrays[i][j][res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))]
           //         })
           //       }
           //     }
           //   }
           // }
+          for(let i=0; i< res.data.resultArrays.length; i++) {
+            tempChartData.push([[], [], [], []])
+            for(let j=0; j < res.data.resultArrays[i].length; j++) {
+              for(let k=0; k < res.data.resultArrays[i][j].length; k++) {
+                
+                // if(k == res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))){
+                  tempChartData[i][k].push({ 
+                    x: k+1,
+                    // x: res.data.resultArrays[i][j][k],
+                    y: res.data.resultArrays[i][j][k]
+                    // x: res.data.resultArrays[i][j][res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))],
+                    // y: res.data.resultArrays[i][j][res.data.resultArrays[i][j].indexOf(Math.min(...res.data.resultArrays[i][j]))]
+                  })
+                // }
+              }
+            }
+          }
 
           // for (let i = 0; i < res.data.resultArrays.length; i++) {
           //   if (i == 0) {
@@ -133,7 +149,7 @@ const Result = () => {
           //     }
           //   }
           // }
-          console.log(tempChartData)
+          // console.log(tempChartData)
           setChartData(tempChartData);
         })
         .catch((err) => {
@@ -153,6 +169,54 @@ const Result = () => {
       </Category>
     ));
   };
+
+  const renderChart = () => {
+    return chartData.map((key, index) => {
+      return <div style={{marginBottom: '30px'}}>
+        <Scatter key={index}
+          data={{
+            datasets: [
+              {
+                label: "Facebook",
+                data: chartData[index][0],
+                backgroundColor: "rgba(255, 99, 132, 1)",
+              },
+              {
+                label: "Instagram",
+                data: chartData[index][1],
+                backgroundColor: "rgba(54, 162, 235, 1)",
+              },
+              {
+                label: "Twitter",
+                data: chartData[index][2],
+                backgroundColor: "rgba(255, 206, 86, 1)",
+              },
+              {
+                label: "Tiktok",
+                data: chartData[index][3],
+                backgroundColor: "rgba(75, 192, 192, 1)",
+              },
+            ],
+          }}
+          width={600}
+          height={400}
+          options={{
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
+          }}
+        />
+        <p style={{position: 'absolute', transform: 'rotate(-90deg)', marginTop: '-45vh', marginLeft: "-55px"}}>Category</p>
+        <p style={{textAlign: 'center'}}>Social Media</p>
+      </div>
+    })
+  }
 
   return (
     <ResultContainer>
@@ -247,45 +311,7 @@ const Result = () => {
           }}
         />
         )} */}
-        <Scatter
-          data={{
-            datasets: [
-              {
-                label: "Facebook",
-                data: chartData[0],
-                backgroundColor: "rgba(255, 99, 132, 1)",
-              },
-              {
-                label: "Instagram",
-                data: chartData[1],
-                backgroundColor: "rgba(54, 162, 235, 1)",
-              },
-              {
-                label: "Twitter",
-                data: chartData[2],
-                backgroundColor: "rgba(255, 206, 86, 1)",
-              },
-              {
-                label: "Tiktok",
-                data: chartData[3],
-                backgroundColor: "rgba(75, 192, 192, 1)",
-              },
-            ],
-          }}
-          width={600}
-          height={400}
-          options={{
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                  },
-                },
-              ],
-            },
-          }}
-        />
+        {renderChart()}
     </ResultContainer>
   );
 };
